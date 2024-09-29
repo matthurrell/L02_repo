@@ -273,27 +273,34 @@ visitors_with_nations %>%
 _Within each of the 4 nations, what is the proportion of tourist attractions that have free admission for all visitors?_
 
 ```{r Ex_m}
-visitors_with_nations %>% 
+visitors_with_nations <- visitors %>% 
  mutate(nation = case_when(
       region == "Northern Ireland" ~ "Northern Ireland",
       region == "Scotland" ~ "Scotland",
       region == "Wales" ~ "Wales",
       TRUE ~ "England")
- ) %>% 
+ )
 
-free_nations <- visitors_with_nations %>%
+free_nation <- visitors_with_nations %>%
   mutate(free_admission = case_when(
     admission == "Free" ~ "Free",
     admission == "Members" ~ "Members",
     TRUE ~ "Charged"
   ))
 
-str(free_nations)
+str(free_nation)
     
-visitors_with_nations %>%
-  group_by(nation, free_admission) %>%
-  summarise(Num_Free_admission = n())
+free_only <- free_nation %>% 
+  filter(free_admission == "Free")
 
+#table(free_only$free_admission)
+#, .groups = "drop"
+
+free_admissions_only <- free_only %>% 
+  group_by(nation) %>%
+  summarise(Num_Free_admission = n(), .groups = "drop")
+
+print(free_admissions_only)
 ```
 
 
